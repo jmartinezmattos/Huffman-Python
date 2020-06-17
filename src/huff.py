@@ -39,7 +39,6 @@ def codificar(tabla, texto):
 
 def to_binary(entrada, bits=8, pack_format = 'B'):
 
-
     byte_list = []
     for i in range(0, len(entrada), bits):  # separo en bytes
         byte_list.append(entrada[i:(i + bits)])
@@ -61,23 +60,15 @@ if __name__ == '__main__':
 
     f = open(archivo, "r")
 
-    #Esto hay que cambiarlo por mmap
-    #txt = f.read()
-
     txt = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
     huff = table(txt)
 
     codigo_string = codificar(huff, txt)
 
-    #print(codigo_string)
-
     final_list = to_binary(codigo_string)
 
-    #print(final_list)
-
-    # make file
     newFile = open("nuevo", "wb")
-    # write to file
+
     for x in final_list:
         newFile.write(x)
