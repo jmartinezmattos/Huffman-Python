@@ -1,5 +1,10 @@
 from collections import defaultdict
 
+#f = open('comprimido.hof', 'rb') #en modo read binary
+
+#for x in f:
+#    #lee cada byte
+#    pass
 
 def dehuff(code, huff):
 

@@ -1,8 +1,15 @@
+import struct
 import sys
 from heapq import heappush, heappop, heapify
 from collections import defaultdict
 
-def table(symb2freq):
+def table(txt):
+
+    symb2freq = defaultdict(int)
+
+    for ch in txt:
+        symb2freq[ch] += 1
+
     """Huffman encode the given dict mapping symbols to weights"""
     heap = [[wt, [sym, ""]] for sym, wt in symb2freq.items()]
     heapify(heap)
@@ -34,22 +41,38 @@ if __name__ == '__main__':
 
     archivo = sys.argv[1]
 
-    symb2freq = defaultdict(int)
-
     f = open(archivo, "r")
 
     #Esto hay que cambiarlo por mmap
     txt = f.read()
 
-    for ch in txt:
-        symb2freq[ch] += 1
-    # in Python 3.1+:
-    # symb2freq = collections.Counter(txt)
-    huff = table(symb2freq)
+    huff = table(txt)
 
     codigo_string = codificar(huff, txt)
 
     print(codigo_string)
 
-    #struct.pack()
+    byte_list = []
+
+    for i in range(0, len(codigo_string), 8):
+        byte_list.append(codigo_string[i:(i+8)])
+
+    print(byte_list)
+
+    while len(byte_list[-1]) != 8: #hacemos que el ultimo byte este completo
+        byte_list[-1] += '0'
+
+    print(byte_list)
+
+    final_list = []
+    for x in byte_list:
+        final_list.append(struct.pack('!B', int(x, 2)))
+
+    print(final_list)
+
+    # make file
+    newFile = open("nuevo", "wb")
+    # write to file
+    for x in final_list:
+        newFile.write(x)
 
