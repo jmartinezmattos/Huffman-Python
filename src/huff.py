@@ -37,6 +37,8 @@ if __name__ == '__main__':
     symb2freq = defaultdict(int)
 
     f = open(archivo, "r")
+
+    #Esto hay que cambiarlo por mmap
     txt = f.read()
 
     for ch in txt:
