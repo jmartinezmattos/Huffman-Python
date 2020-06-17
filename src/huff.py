@@ -37,6 +37,15 @@ def codificar(tabla, texto):
 
     return txt_bin
 
+def create_name(name):
+    i = 0
+    nombre_final = ''
+    while name[i] != '.':
+        nombre_final += name[i]
+        i += 1
+    nombre_final += '.huf'
+    return nombre_final
+
 def to_binary(entrada, bits=8, pack_format = 'B'):
 
     byte_list = []
@@ -68,14 +77,7 @@ if __name__ == '__main__':
 
     final_list = to_binary(codigo_string)
 
-    i=0
-    nombre_final = ''
-    while archivo[i] != '.':
-        nombre_final += archivo[i]
-        i+=1
-    nombre_final += '.huf'
-
-    newFile = open(nombre_final, "wb")
+    newFile = open(create_name(archivo), "wb")
 
     for x in final_list:
         newFile.write(x)
