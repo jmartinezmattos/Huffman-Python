@@ -68,7 +68,14 @@ if __name__ == '__main__':
 
     final_list = to_binary(codigo_string)
 
-    newFile = open("nuevo", "wb")
+    i=0
+    nombre_final = ''
+    while archivo[i] != '.':
+        nombre_final += archivo[i]
+        i+=1
+    nombre_final += '.huf'
+
+    newFile = open(nombre_final, "wb")
 
     for x in final_list:
         newFile.write(x)
