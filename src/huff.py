@@ -1,3 +1,4 @@
+import mmap
 import struct
 import sys
 from heapq import heappush, heappop, heapify
@@ -36,6 +37,23 @@ def codificar(tabla, texto):
 
     return txt_bin
 
+def to_binary(entrada, bits=8, pack_format = 'B'):
+
+
+    byte_list = []
+    for i in range(0, len(entrada), bits):  # separo en bytes
+        byte_list.append(entrada[i:(i + bits)])
+
+    while len(byte_list[-1]) != bits:  # hacemos que el ultimo byte este completo
+        byte_list[-1] += '0'
+
+    final_list = []
+    pack_form = '!' + pack_format
+    for x in byte_list:
+        final_list.append(struct.pack(pack_form, int(x, 2)))
+
+    return final_list
+
 
 if __name__ == '__main__':
 
@@ -44,35 +62,22 @@ if __name__ == '__main__':
     f = open(archivo, "r")
 
     #Esto hay que cambiarlo por mmap
-    txt = f.read()
+    #txt = f.read()
+
+    txt = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
     huff = table(txt)
 
     codigo_string = codificar(huff, txt)
 
-    print(codigo_string)
+    #print(codigo_string)
 
-    byte_list = []
+    final_list = to_binary(codigo_string)
 
-    for i in range(0, len(codigo_string), 8):
-        byte_list.append(codigo_string[i:(i+8)])
-
-    print(byte_list)
-
-    while len(byte_list[-1]) != 8: #hacemos que el ultimo byte este completo
-        byte_list[-1] += '0'
-
-    print(byte_list)
-
-    final_list = []
-    for x in byte_list:
-        final_list.append(struct.pack('!B', int(x, 2)))
-
-    print(final_list)
+    #print(final_list)
 
     # make file
     newFile = open("nuevo", "wb")
     # write to file
     for x in final_list:
         newFile.write(x)
-
