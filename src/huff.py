@@ -85,7 +85,7 @@ def elements_array(huff):
         #Segundo byte es valor entero que indica cantidad de bits que usa el codigo huffman
         lista_individual.append(struct.pack('!B', len(x[1])))
         #bytes del 3 al 6 son el codigo huffman
-        lista_individual.append(struct.pack('!i', int(x[1], 2)))
+        lista_individual.append(struct.pack('!I', int(x[1], 2)))
 
         #agregamos a la lista total
         lista_total.append(lista_individual)
