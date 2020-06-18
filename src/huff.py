@@ -1,3 +1,4 @@
+import argparse
 import mmap
 import os
 import struct
@@ -94,7 +95,19 @@ def elements_array(huff):
 
 if __name__ == '__main__':
 
-    archivo = sys.argv[1]
+    parser = argparse.ArgumentParser(description='4pics - elige palabras para el juego')
+    parser.add_argument('-f', '--force', help='forzar la compresion, aunque el archivo resultante sea mas grande', required=False, action='store_true')
+    parser.add_argument('-v', '--verbose', help='escribe en stderr información sobre el avance del proceso,por ejemplo, los bitcodes para cada símbolo', required=False, action='store_true')
+    parser.add_argument('archivo', nargs='+', action='store')
+    args = parser.parse_args()
+
+    if args.force:
+        print("Forzado")
+
+    if args.verbose:
+        print("No se que hace")
+
+    archivo = args.archivo[0] ##no se por que es asi pero funciona
 
     f = open(archivo, "r")
 
