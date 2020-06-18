@@ -1,4 +1,5 @@
 import mmap
+import os
 import struct
 import sys
 from heapq import heappush, heappop, heapify
@@ -62,6 +63,34 @@ def to_binary(entrada, bits=8, pack_format = 'B'):
 
     return final_list
 
+def crear_cabezal(archivo, sym_arraylen, sym_arraysize, magic):
+
+    magic_nbr = struct.pack('!H', magic)#dos bytes
+    sym_arraylen = struct.pack('B',sym_arraylen)#un byte
+    sym_arraysize = struct.pack('!B', sym_arraysize) #no se si esto esta bien le puse 8 por la cantidad de bits
+    filelen = struct.pack('!I', os.path.getsize(archivo))#cuatro bytes
+
+    cabezal = [magic_nbr, sym_arraylen, sym_arraysize, filelen]
+
+    return cabezal
+
+def elements_array(huff):
+
+    lista_total = []
+
+    for x in huff:
+        lista_individual = []
+        #Primer byte es el simbolo
+        lista_individual.append(struct.pack('!B', ord(x[0])))
+        #Segundo byte es valor entero que indica cantidad de bits que usa el codigo huffman
+        lista_individual.append(struct.pack('!B', len(x[1])))
+        #bytes del 3 al 6 son el codigo huffman
+        lista_individual.append(struct.pack('!i', int(x[1], 2)))
+
+        #agregamos a la lista total
+        lista_total.append(lista_individual)
+
+    return lista_total
 
 if __name__ == '__main__':
 
@@ -73,11 +102,24 @@ if __name__ == '__main__':
 
     huff = table(txt)
 
+    print(huff)
+
     codigo_string = codificar(huff, txt)
 
     final_list = to_binary(codigo_string)
 
+    elementos = elements_array(huff)
+
+    cabezal = crear_cabezal(archivo, len(elementos), 6, 55555)
+
     newFile = open(create_name(archivo), "wb")
+
+    for x in cabezal:
+        newFile.write(x)
+
+    for x in elementos:
+        for y in x:
+            newFile.write(y)
 
     for x in final_list:
         newFile.write(x)
