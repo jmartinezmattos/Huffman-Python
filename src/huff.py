@@ -6,6 +6,11 @@ import sys
 from heapq import heappush, heappop, heapify
 from collections import defaultdict
 
+import itertools
+import threading
+import time
+
+
 def table(txt, verbose = False):
 
     symb2freq = defaultdict(int)
@@ -101,13 +106,27 @@ def elements_array(huff):
 
     return lista_total
 
+def animate():
+       for c in itertools.cycle(['|', '/', '-', '\\']):
+           if done:
+               break
+           sys.stdout.write('\rProcesando... ' + c +' ')
+           sys.stdout.flush()
+           time.sleep(0.1)
+       sys.stdout.write('\rProceso terminado!     ')
+
 if __name__ == '__main__':
+
+    done = False
 
     parser = argparse.ArgumentParser(description='4pics - elige palabras para el juego')
     parser.add_argument('-f', '--force', help='forzar la compresion, aunque el archivo resultante sea mas grande', required=False, action='store_true')
     parser.add_argument('-v', '--verbose', help='escribe en stderr información sobre el avance del proceso,por ejemplo, los bitcodes para cada símbolo', required=False, action='store_true')
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
+
+    t = threading.Thread(target=animate)
+    t.start()
 
     if args.force:
         print("Forzado")
@@ -156,3 +175,5 @@ if __name__ == '__main__':
 
     if args.verbose:
         sys.stderr.write('Proceso finalizado')
+
+    done = True
