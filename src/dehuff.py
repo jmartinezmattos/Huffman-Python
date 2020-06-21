@@ -144,5 +144,9 @@ if __name__ == '__main__':
             buffer += byte[byte_pos]
             byte_pos += 1
 
+        if size%500 == 0:
+            print("Bytes impresos: ", size)
+
+    print("Bytes impresos: ", size)
     f.close()
 
