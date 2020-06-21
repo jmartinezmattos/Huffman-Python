@@ -9,6 +9,30 @@ import struct
 #    #lee cada byte
 #    pass
 
+def int_to_key(entero, size):
+
+    a = bin(entero)
+
+    corte = len(a) - size
+
+    new_str = a[corte:]
+
+    return new_str
+
+def crear_diccionario(tabla):
+
+    new_dict = {}
+
+    for x in tabla:
+
+        key = int_to_key(x[2],x[1])
+
+        key = key.replace('b', '0')
+
+        new_dict[key] = x[0]
+
+    return  new_dict
+
 def dehuff(code, huff):
 
     result = ''
@@ -26,6 +50,18 @@ def dehuff(code, huff):
             temp = ''
     return result
 
+def int_to_binary_str_array(entero):
+    new_str = ''
+
+    a = bin(entero)
+
+    for x in range(1, len(a) - 1):
+        new_str = a[-x] + new_str
+
+    while len(new_str) != 8:
+        new_str = '0' + new_str
+
+    return new_str
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Huffman')
@@ -51,6 +87,10 @@ if __name__ == '__main__':
 
     #################LECTURA DE CABEZAL END ##############################
 
+
+
+    #################LECTURA ELEMENTOS BEGIN ##############################
+
     largo_elementos = sym_arraysize * sym_arraylen
 
     inicial = 8
@@ -60,7 +100,7 @@ if __name__ == '__main__':
     for x in range(0, largo_elementos, sym_arraysize):
         codigo_simbolo = []
 
-        simbolo = chr(codigo[inicial + x])  ## esto lo combierte mal
+        simbolo = chr(codigo[inicial + x])
 
         largo_huff = codigo[inicial + x + 1]
 
@@ -70,5 +110,39 @@ if __name__ == '__main__':
 
         elementos.append(codigo_simbolo)
 
-    for x in elementos:
-        print(x)
+    #################LECTURA ELEMENTOS END ##############################
+
+    inicio_encriptado = largo_elementos + inicial
+
+    dict = crear_diccionario(elementos)
+
+    byte = int_to_binary_str_array(codigo[inicio_encriptado])
+    buffer = ''
+    byte_pos = 0
+    encontrado = False
+    size = 0
+    f = open("Salida.txt", "w")
+
+    while size < filelen:
+
+        if dict.get(buffer) != None:
+            f.write(dict.get(buffer))
+            size += 1
+            encontrado = True
+
+        if encontrado:
+            buffer = ''
+            encontrado = False
+
+        else:
+
+            if byte_pos > 7:  # checkeamos si se termino el byte
+                byte_pos = 0
+                inicio_encriptado += 1
+                byte = int_to_binary_str_array(codigo[inicio_encriptado])
+
+            buffer += byte[byte_pos]
+            byte_pos += 1
+
+    f.close()
+
