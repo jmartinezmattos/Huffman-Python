@@ -57,18 +57,18 @@ if __name__ == '__main__':
 
     elementos = []
 
-    for x in range(0, largo_elementos):
-
+    for x in range(0, largo_elementos, sym_arraysize):
         codigo_simbolo = []
 
-        simbolo = chr(codigo[inicial + x*sym_arraysize])
+        simbolo = chr(codigo[inicial + x])  ## esto lo combierte mal
 
-        largo_huff = codigo[inicial + x*sym_arraysize + 1]
+        largo_huff = codigo[inicial + x + 1]
 
-        codigo_huff = struct.unpack('!I', codigo[inicial + x*sym_arraysize + 2: inicial + x*sym_arraysize + 6])[0]
+        codigo_huff = struct.unpack('!I', codigo[inicial + x + 2: inicial + x + 6])[0]
 
         codigo_simbolo = [simbolo, largo_huff, codigo_huff]
 
         elementos.append(codigo_simbolo)
 
-    print(elementos)
+    for x in elementos:
+        print(x)
