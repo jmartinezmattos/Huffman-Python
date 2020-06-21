@@ -6,9 +6,12 @@ import sys
 from heapq import heappush, heappop, heapify
 from collections import defaultdict
 
-def table(txt):
+def table(txt, verbose = False):
 
     symb2freq = defaultdict(int)
+
+    if verbose:
+        sys.stderr.write('Contando frecuencia de caracteres...\n')
 
     for ch in txt:
         symb2freq[ch] += 1
@@ -16,9 +19,14 @@ def table(txt):
     """Huffman encode the given dict mapping symbols to weights"""
     heap = [[wt, [sym, ""]] for sym, wt in symb2freq.items()]
     heapify(heap)
+
+    if verbose:
+        sys.stderr.write('Calculando codigos huffman...\n')
+
     while len(heap) > 1:
         lo = heappop(heap)
         hi = heappop(heap)
+
         for pair in lo[1:]:
             pair[1] = '0' + pair[1]
         for pair in hi[1:]:
@@ -104,19 +112,22 @@ if __name__ == '__main__':
     if args.force:
         print("Forzado")
 
-    if args.verbose:
-        print("No se que hace")
-
     archivo = args.archivo[0] ##no se por que es asi pero funciona
 
     f = open(archivo, "r")
 
     txt = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
-    huff = table(txt)
+    huff = table(txt, args.verbose)
 
-    print(huff)
+    if args.verbose:
+        sys.stderr.write('\nTabla huffman completada:\n\n')
 
+        for x in huff:
+            sys.stderr.write(str(x[0]) + ' = ' + str(x[1]) + '\n')
+
+    if args.verbose:
+        sys.stderr.write('\nCodificando texto...\n')
     codigo_string = codificar(huff, txt)
 
     final_list = to_binary(codigo_string)
@@ -127,12 +138,21 @@ if __name__ == '__main__':
 
     newFile = open(create_name(archivo), "wb")
 
+    if args.verbose:
+        sys.stderr.write('Escribiendo cabezal...\n')
     for x in cabezal:
         newFile.write(x)
 
+    if args.verbose:
+        sys.stderr.write('Escribiendo elementos...\n')
     for x in elementos:
         for y in x:
             newFile.write(y)
 
+    if args.verbose:
+        sys.stderr.write('Escribiendo texto codificado...\n')
     for x in final_list:
         newFile.write(x)
+
+    if args.verbose:
+        sys.stderr.write('Proceso finalizado')
