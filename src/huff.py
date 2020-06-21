@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
     done = False
 
-    parser = argparse.ArgumentParser(description='4pics - elige palabras para el juego')
+    parser = argparse.ArgumentParser(description='Huffman')
     parser.add_argument('-f', '--force', help='forzar la compresion, aunque el archivo resultante sea mas grande', required=False, action='store_true')
     parser.add_argument('-v', '--verbose', help='escribe en stderr información sobre el avance del proceso,por ejemplo, los bitcodes para cada símbolo', required=False, action='store_true')
     parser.add_argument('archivo', nargs='+', action='store')
@@ -150,8 +150,8 @@ if __name__ == '__main__':
     codigo_string = codificar(huff, txt)
 
     final_list = to_binary(codigo_string)
-
     elementos = elements_array(huff)
+
 
     cabezal = crear_cabezal(archivo, len(elementos), 6, 55555)
 
@@ -172,8 +172,5 @@ if __name__ == '__main__':
         sys.stderr.write('Escribiendo texto codificado...\n')
     for x in final_list:
         newFile.write(x)
-
-    if args.verbose:
-        sys.stderr.write('Proceso finalizado')
 
     done = True
