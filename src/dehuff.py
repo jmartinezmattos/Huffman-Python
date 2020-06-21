@@ -1,5 +1,6 @@
 import argparse
 import mmap
+import sys
 from collections import defaultdict
 import struct
 
@@ -144,9 +145,10 @@ if __name__ == '__main__':
             buffer += byte[byte_pos]
             byte_pos += 1
 
-        if size%500 == 0:
-            print("Bytes impresos: ", size)
+        if size%1000 == 0: #cada 1000 bytes imprime cuanto va
+            sys.stderr.flush()
+            sys.stderr.write('\rBytes impresos: ' + str(size))
 
-    print("Bytes impresos: ", size)
+    print("Tamaño total:  ", size)
     f.close()
 
