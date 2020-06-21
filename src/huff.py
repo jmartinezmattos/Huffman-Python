@@ -147,11 +147,12 @@ if __name__ == '__main__':
 
     if args.verbose:
         sys.stderr.write('\nCodificando texto...\n')
+
     codigo_string = codificar(huff, txt)
 
     final_list = to_binary(codigo_string)
-    elementos = elements_array(huff)
 
+    elementos = elements_array(huff)
 
     cabezal = crear_cabezal(archivo, len(elementos), 6, 55555)
 

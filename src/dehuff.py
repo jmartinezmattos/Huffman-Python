@@ -39,6 +39,36 @@ if __name__ == '__main__':
 
     codigo = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
-    magic_num = [codigo[0], codigo[1]]
+    #################LECTURA DE CABEZAL BEGIN ##############################
 
-    print(magic_num)
+    magic_num = struct.unpack('!H', codigo[0:2])[0]
+
+    sym_arraylen = codigo[2]
+
+    sym_arraysize = codigo[3]
+
+    filelen = struct.unpack('!I', codigo[4:8])[0]
+
+    #################LECTURA DE CABEZAL END ##############################
+
+    largo_elementos = sym_arraysize * sym_arraylen
+
+    inicial = 8
+
+    elementos = []
+
+    for x in range(0, largo_elementos):
+
+        codigo_simbolo = []
+
+        simbolo = chr(codigo[inicial + x*sym_arraysize])
+
+        largo_huff = codigo[inicial + x*sym_arraysize + 1]
+
+        codigo_huff = struct.unpack('!I', codigo[inicial + x*sym_arraysize + 2: inicial + x*sym_arraysize + 6])[0]
+
+        codigo_simbolo = [simbolo, largo_huff, codigo_huff]
+
+        elementos.append(codigo_simbolo)
+
+    print(elementos)
