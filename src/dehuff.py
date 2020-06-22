@@ -1,6 +1,7 @@
 import argparse
 import mmap
 import sys
+import time
 from collections import defaultdict
 import struct
 
@@ -64,6 +65,15 @@ def int_to_binary_str_array(entero):
 
     return new_str
 
+def create_name(name):
+    i = 0
+    nombre_final = ''
+    while name[i] != '.':
+        nombre_final += name[i]
+        i += 1
+    nombre_final += '.ori'
+    return nombre_final
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Huffman')
     parser.add_argument('-v', '--verbose',help='escribe en stderr información sobre el avance del proceso,por ejemplo, los bitcodes para cada símbolo',required=False, action='store_true')
@@ -71,6 +81,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     archivo = args.archivo[0]  ##no se por que es asi pero funciona
+
+    if not archivo.endswith('.huf'):
+        raise NameError('El archivo no es .huf')
 
     f = open(archivo, "rb")
 
@@ -122,7 +135,7 @@ if __name__ == '__main__':
     byte_pos = 0
     encontrado = False
     size = 0
-    f = open("Salida.txt", "w")
+    f = open(create_name(archivo), "w")
 
     while size < filelen:
 
@@ -145,10 +158,19 @@ if __name__ == '__main__':
             buffer += byte[byte_pos]
             byte_pos += 1
 
-        if size%1000 == 0: #cada 1000 bytes imprime cuanto va
-            sys.stderr.flush()
-            sys.stderr.write('\rBytes impresos: ' + str(size))
+        if args.verbose:
+            if size%10000 == 0: #cada 10000 bytes imprime cuanto va
 
-    print("Tamaño total:  ", size)
+                if size == 0:
+                    porcentaje = 0
+                else:
+                    porcentaje = int((size/filelen)*100)
+
+                sys.stderr.flush()
+                sys.stderr.write('\rBytes impresos: ' + str(size) + ' de ' + str(filelen) + '     (' + str(porcentaje) + '%)')
+
+    if args.verbose:
+        sys.stderr.flush()
+        sys.stderr.write('\rBytes impresos: ' + str(size) + ' de ' + str(filelen) + '     (100%)')
     f.close()
 
