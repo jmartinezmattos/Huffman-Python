@@ -41,11 +41,17 @@ def table(txt, verbose = False):
         heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
     return sorted(heappop(heap)[1:], key=lambda p: (len(p[-1]), p))
 
-def codificar(tabla, texto):
+def obtener_dict(tabla):
     dict_huff = {}
 
     for num in tabla:
         dict_huff[num[0]] = num[1]
+
+    return dict_huff
+
+def codificar(tabla, texto):
+
+    dict_huff = obtener_dict(tabla)
 
     txt_bin = ''
 
@@ -62,6 +68,16 @@ def create_name(name):
         i += 1
     nombre_final += '.huf'
     return nombre_final
+
+def letra_to_binary(entrada, bits = 8, pack_format = 'B'):
+
+    print(entrada)
+
+
+    pack_form = '!' + pack_format
+    binario = struct.pack(pack_form, int(entrada, 2))
+
+    return binario
 
 def to_binary(entrada, bits=8, pack_format = 'B'):
 
@@ -127,8 +143,8 @@ if __name__ == '__main__':
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
 
-    t = threading.Thread(target=animate)
-    t.start()
+    #t = threading.Thread(target=animate)
+    #t.start()
 
     if args.force:
         print("Forzado")
@@ -141,6 +157,8 @@ if __name__ == '__main__':
 
     huff = table(txt, args.verbose)
 
+    dict_huff = obtener_dict(huff)
+
     if args.verbose:
         sys.stderr.write('\nTabla huffman completada:\n\n')
 
@@ -150,15 +168,17 @@ if __name__ == '__main__':
     if args.verbose:
         sys.stderr.write('\nCodificando texto...\n')
 
-    codigo_string = codificar(huff, txt)
+    newFile = open(create_name(archivo), "wb")
 
-    final_list = to_binary(codigo_string)
+    ##codigo_string = codificar(huff, txt)
+
+    ##final_list = to_binary(codigo_string)
 
     elementos = elements_array(huff)
 
     cabezal = crear_cabezal(archivo, len(elementos), 6, 55555)
 
-    newFile = open(create_name(archivo), "wb")
+    print(os.path.getsize(archivo))
 
     if args.verbose:
         sys.stderr.write('Escribiendo cabezal...\n')
@@ -172,8 +192,31 @@ if __name__ == '__main__':
             newFile.write(y)
 
     if args.verbose:
-        sys.stderr.write('Escribiendo texto codificado...\n')
-    for x in final_list:
-        newFile.write(x)
+     sys.stderr.write('Escribiendo texto codificado...\n')
+
+    buffer_write = ''
+    buffer_store = ''
+
+    for letra in txt:
+        obtener = dict_huff[letra] ##obtengo el codigo huff de la letra
+
+        buffer_store += obtener
+
+        while len(buffer_write) != 8 and len(buffer_store) != 0:
+            buffer_write += buffer_store[0]
+            if len(buffer_store) == 1:
+                buffer_store = ''
+            else:
+                buffer_store = buffer_store[1:]
+
+        if len(buffer_write) == 8:
+           binario = struct.pack('!B', int(buffer_write, 2))
+           newFile.write(binario)
+           buffer_write = ''
+
+    #if args.verbose:
+    #    sys.stderr.write('Escribiendo texto codificado...\n')
+    #for x in final_list:
+    #    newFile.write(x)
 
     done = True
