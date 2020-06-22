@@ -2,6 +2,8 @@ import argparse
 import mmap
 import sys
 import struct
+from os import path
+
 
 def int_to_key(entero, size):
 
@@ -10,6 +12,9 @@ def int_to_key(entero, size):
     corte = len(a) - size
 
     new_str = a[corte:]
+
+    while len(new_str) < size:
+        new_str = '0' + new_str
 
     return new_str
 
@@ -59,6 +64,12 @@ if __name__ == '__main__':
 
     if not archivo.endswith('.huf'):
         raise NameError('El archivo no es .huf')
+
+    if path.exists(create_name(archivo)):
+        sys.stderr.write("El archivo '" +create_name(archivo) +"' existe, ¿descomprimir de todos modos? s/n \n")
+        answer = input()
+        if answer != 's':
+            sys.exit()
 
     f = open(archivo, "rb")
 
@@ -152,5 +163,6 @@ if __name__ == '__main__':
     if args.verbose:
         sys.stderr.flush()
         sys.stderr.write('\rBytes impresos: ' + str(size) + ' de ' + str(filelen) + '     (100%)')
+
     f.close()
 

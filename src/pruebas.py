@@ -5,33 +5,22 @@ from pip._vendor.msgpack.fallback import xrange
 
 if __name__ == '__main__':
 
-    import time
-    import sys
+    entero = 3
 
-    toolbar_width = 40
+    size = 8
 
-    # setup toolbar
-    sys.stdout.write("[%s]" % (" " * toolbar_width))
-    sys.stdout.flush()
-    sys.stdout.write("\b" * (toolbar_width + 1))  # return to start of line, after '['
+    a = bin(entero)
 
-    for i in xrange(toolbar_width):
-        time.sleep(0.1)  # do real work here
-        # update the bar
-        sys.stdout.write("-")
-        sys.stdout.flush()
+    corte = len(a) - size
 
-    sys.stdout.write("]\n")  # this ends the progress bar
+    new_str = a[corte:]
 
+    while len(new_str) < size:
+        new_str = '0' + new_str
 
+    new_str = new_str.replace('b', '0')
 
-
-
-
-
-
-
-
+    print(new_str)
 
 
 
