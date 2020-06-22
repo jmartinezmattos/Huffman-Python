@@ -123,7 +123,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Compresor Huffman')
     parser.add_argument('-f', '--force', help='forzar la compresion, aunque el archivo resultante sea mas grande', required=False, action='store_true')
-    parser.add_argument('-v', '--verbose', help='escribe en stderr información sobre el avance del proceso,por ejemplo, los bitcodes para cada simbolo', required=False, action='store_true')
+    parser.add_argument('-v', '--verbose', help='escribe en stderr informacion sobre el avance del proceso,por ejemplo, los bitcodes para cada simbolo', required=False, action='store_true')
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
 
