@@ -59,7 +59,7 @@ def create_name(name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Descompresor Huffman.')
-    parser.add_argument('-v', '--verbose',help='Escribe en stderr información sobre el avance del proceso, por ejemplo, los bitcodes para cada símbolo.',required=False, action='store_true')
+    parser.add_argument('-v', '--verbose',help='Escribe en stderr información sobre el avance del proceso, por ejemplo, los bitcodes para cada simbolo.',required=False, action='store_true')
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
 
