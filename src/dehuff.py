@@ -112,9 +112,9 @@ if __name__ == '__main__':
     for x in range(0, largo_elementos, sym_arraysize):
         codigo_simbolo = []
 
-        simbolo = chr(codigo[inicial + x])
+        simbolo = chr(struct.unpack('!B', codigo[inicial + x])[0])
 
-        largo_huff = codigo[inicial + x + 1]
+        largo_huff = struct.unpack('!B', codigo[inicial + x + 1])[0]
 
         codigo_huff = struct.unpack('!I', codigo[inicial + x + 2: inicial + x + 6])[0]
 
