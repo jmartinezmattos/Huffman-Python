@@ -1,15 +1,7 @@
 import argparse
 import mmap
 import sys
-import time
-from collections import defaultdict
 import struct
-
-#f = open('comprimido.hof', 'rb') #en modo read binary
-
-#for x in f:
-#    #lee cada byte
-#    pass
 
 def int_to_key(entero, size):
 
@@ -35,23 +27,6 @@ def crear_diccionario(tabla):
 
     return  new_dict
 
-def dehuff(code, huff):
-
-    result = ''
-
-    dict_dehuff = defaultdict(lambda: 2)
-
-    for num in huff:
-        dict_dehuff[num[1]] = num[0]
-
-    temp = ''
-    for digit in code:
-        temp += digit
-        if dict_dehuff[temp] != 2:
-            result += dict_dehuff[temp]
-            temp = ''
-    return result
-
 def int_to_binary_str_array(entero):
     new_str = ''
 
@@ -75,8 +50,8 @@ def create_name(name):
     return nombre_final
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Huffman')
-    parser.add_argument('-v', '--verbose',help='escribe en stderr información sobre el avance del proceso,por ejemplo, los bitcodes para cada símbolo',required=False, action='store_true')
+    parser = argparse.ArgumentParser(description='Descompresor Huffman.')
+    parser.add_argument('-v', '--verbose',help='Escribe en stderr información sobre el avance del proceso, por ejemplo, los bitcodes para cada símbolo.',required=False, action='store_true')
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
 
@@ -129,6 +104,11 @@ if __name__ == '__main__':
     inicio_encriptado = largo_elementos + inicial
 
     dict = crear_diccionario(elementos)
+
+    if args.verbose:
+        print("Codigos huffman: \n")
+        for key, value in dict.items():
+            print(key, ' : ', value)
 
     byte = int_to_binary_str_array(codigo[inicio_encriptado])
     buffer = ''
