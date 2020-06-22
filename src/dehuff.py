@@ -133,7 +133,7 @@ if __name__ == '__main__':
         for key, value in dict.items():
             print(key, ' : ', value)
 
-    byte = int_to_binary_str_array(codigo[inicio_encriptado])
+    byte = int_to_binary_str_array(struct.unpack('!B', codigo[inicio_encriptado])[0])
     buffer = ''
     byte_pos = 0
     size = 0
@@ -151,7 +151,7 @@ if __name__ == '__main__':
             if byte_pos > 7:  # checkeamos si se termino el byte
                 byte_pos = 0
                 inicio_encriptado += 1
-                byte = int_to_binary_str_array(codigo[inicio_encriptado])
+                byte = int_to_binary_str_array(struct.unpack('!B', codigo[inicio_encriptado])[0])
 
             buffer += byte[byte_pos]
             byte_pos += 1
