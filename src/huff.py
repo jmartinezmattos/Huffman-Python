@@ -131,7 +131,7 @@ if __name__ == '__main__':
     if args.force:
         print("Forzado")
 
-    archivo = args.archivo[0] ##no se por que es asi pero funciona
+    archivo = args.archivo[0]
 
     f = open(archivo, "r")
 

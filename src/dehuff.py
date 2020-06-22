@@ -4,6 +4,7 @@ import sys
 import struct
 from os import path
 
+MAGIC = 55555
 
 def int_to_key(entero, size):
 
@@ -60,7 +61,7 @@ if __name__ == '__main__':
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
 
-    archivo = args.archivo[0]  ##no se por que es asi pero funciona
+    archivo = args.archivo[0]
 
     if not archivo.endswith('.huf'):
         raise NameError('El archivo no es .huf')
@@ -78,6 +79,9 @@ if __name__ == '__main__':
     #################LECTURA DE CABEZAL BEGIN ##############################
 
     magic_num = struct.unpack('!H', codigo[0:2])[0]
+
+    if magic_num != MAGIC:
+        raise Exception('Bad magic number')
 
     sym_arraylen = codigo[2]
 
