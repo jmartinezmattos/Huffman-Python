@@ -97,10 +97,10 @@ if __name__ == '__main__':
 
     #################LECTURA ELEMENTOS BEGIN ##############################
 
-    print(sym_arraysize)
-    print(sym_arraylen)
+    print(int(sym_arraysize))
+    print(int(sym_arraylen))
 
-    largo_elementos = sym_arraysize * sym_arraylen
+    largo_elementos = int(sym_arraysize) * int(sym_arraylen)
 
     inicial = 8
 
