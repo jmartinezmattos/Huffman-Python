@@ -85,11 +85,14 @@ if __name__ == '__main__':
     if magic_num != MAGIC:
         raise Exception('Bad magic number')
 
-    sym_arraylen = codigo[2]
+    sym_arraylen = struct.unpack('!B', codigo[2])[0]
 
-    sym_arraysize = codigo[3]
+    sym_arraysize = struct.unpack('!B', codigo[3])[0]
 
     filelen = struct.unpack('!I', codigo[4:8])[0]
+
+    if args.verbose:
+        print(filelen)
 
     #################LECTURA DE CABEZAL END ##############################
 
@@ -97,8 +100,8 @@ if __name__ == '__main__':
 
     #################LECTURA ELEMENTOS BEGIN ##############################
 
-    print(int(sym_arraysize))
-    print(int(sym_arraylen))
+    print(sym_arraysize)
+    print(sym_arraylen)
 
     largo_elementos = int(sym_arraysize) * int(sym_arraylen)
 
