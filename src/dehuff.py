@@ -69,7 +69,7 @@ if __name__ == '__main__':
         raise NameError('El archivo no es .huf')
 
     if path.exists(create_name(archivo)):
-        sys.stderr.write("El archivo '" +create_name(archivo) +"' se sobreescribira. \n¿Descomprimir de todos modos? s/n \n")
+        sys.stderr.write("El archivo '" +create_name(archivo) +" ya existe. Continuar: \n")
         answer = input()
         if answer != 's':
             sys.exit()
