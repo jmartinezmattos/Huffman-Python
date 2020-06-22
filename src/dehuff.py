@@ -66,7 +66,7 @@ if __name__ == '__main__':
         raise NameError('El archivo no es .huf')
 
     if path.exists(create_name(archivo)):
-        sys.stderr.write("El archivo '" +create_name(archivo) +"' existe, ¿descomprimir de todos modos? s/n \n")
+        sys.stderr.write("El archivo '" +create_name(archivo) +"' se sobreescribira. \n¿Descomprimir de todos modos? s/n \n")
         answer = input()
         if answer != 's':
             sys.exit()
@@ -124,7 +124,6 @@ if __name__ == '__main__':
     byte = int_to_binary_str_array(codigo[inicio_encriptado])
     buffer = ''
     byte_pos = 0
-    encontrado = False
     size = 0
     f = open(create_name(archivo), "w")
 
@@ -133,11 +132,7 @@ if __name__ == '__main__':
         if dict.get(buffer) != None:
             f.write(dict.get(buffer))
             size += 1
-            encontrado = True
-
-        if encontrado:
             buffer = ''
-            encontrado = False
 
         else:
 
