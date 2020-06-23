@@ -165,8 +165,9 @@ if __name__ == '__main__':
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
 
-    t = threading.Thread(target=animate)
-    t.start()
+    if args.verbose:
+        t = threading.Thread(target=animate)
+        t.start()
 
     archivo = args.archivo[0]
 
