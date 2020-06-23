@@ -176,6 +176,8 @@ if __name__ == '__main__':
 
     compress_size = table(txt, args.verbose)[1]
 
+    print(compress_size)
+
     dict_huff = obtener_dict(huff) ##revisar si es necesario
 
     if args.verbose:
