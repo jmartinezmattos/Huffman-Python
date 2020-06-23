@@ -139,7 +139,7 @@ if __name__ == '__main__':
     size = 0
     f = open(create_name(archivo), "w")
 
-    while size < filelen - 1:
+    while size < filelen:
 
         if dict.get(buffer) != None:
             f.write(dict.get(buffer))
