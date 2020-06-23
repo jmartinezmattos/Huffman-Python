@@ -175,7 +175,8 @@ if __name__ == '__main__':
     result = table(txt, args.verbose)
 
     huff = result[0]
-    compress_size = result[1]
+
+    compress_size = result[1] + len(huff)*6 + 8
 
 
     print(compress_size)
