@@ -165,8 +165,8 @@ if __name__ == '__main__':
 
     if args.verbose:
         sys.stderr.write('Size original: ' + str(os.path.getsize(archivo)))
-        t = threading.Thread(target=animate)
-        t.start()
+        ##t = threading.Thread(target=animate)
+        ##t.start()
 
     f = open(archivo, "r")
 
