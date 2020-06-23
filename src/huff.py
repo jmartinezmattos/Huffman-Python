@@ -216,7 +216,7 @@ if __name__ == '__main__':
 
     while len(buffer_store) != 0:
 
-        while buffer_write < 8:
+        while len(buffer_write) < 8:
             if len(buffer_store) !=0:
                 buffer_write += buffer_store[0]
                 if len(buffer_store) == 1:
