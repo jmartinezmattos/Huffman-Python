@@ -214,21 +214,21 @@ if __name__ == '__main__':
            newFile.write(binario)
            buffer_write = ''
 
-    if buffer_store != '':
-        print("Buffer STORE")
-        while len(buffer_store)<8:
-            buffer_store += '0'
-        print(buffer_store)
-        binario = struct.pack('!B', int(buffer_store, 2))
-        newFile.write(binario)
+    while len(buffer_store) != 0:
 
+        while buffer_write < 8:
+            if len(buffer_store) !=0:
+                buffer_write += buffer_store[0]
+                if len(buffer_store) == 1:
+                    buffer_store = ''
+                else:
+                    buffer_store = buffer_store[1:]
+            else:
+                buffer_write += '0'
 
-    if buffer_write != '':
-        print("el error2")
-        while len(buffer_write) < 8:
-            buffer_write += '0'
         binario = struct.pack('!B', int(buffer_write, 2))
         newFile.write(binario)
+        buffer_write = ''
 
     #if args.verbose:
     #    sys.stderr.write('Escribiendo texto codificado...\n')
