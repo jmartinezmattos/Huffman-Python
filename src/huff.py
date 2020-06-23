@@ -24,7 +24,7 @@ def calc_force(huff, frecuencia):
 
     return False
 
-def table(txt, verbose = False, force = False):
+def table(txt, verbose = False):
 
     symb2freq = defaultdict(int)
 
@@ -53,13 +53,9 @@ def table(txt, verbose = False, force = False):
 
     huff = sorted(heappop(heap)[1:], key=lambda p: (len(p[-1]), p))
 
-    if force:
-        print("Compresion forzada")
-    else:
-        if calc_force(huff, symb2freq):
-            raise Exception("El archivo comprimido es mas grande")
+    size = calc_force(huff, symb2freq)
 
-    return huff
+    return [huff, size]
 
 def obtener_dict(tabla):
     dict_huff = {}
@@ -165,17 +161,20 @@ if __name__ == '__main__':
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
 
+    archivo = args.archivo[0]
+
     if args.verbose:
+        sys.stderr.write('Size original: ' + str(os.path.getsize(archivo)))
         t = threading.Thread(target=animate)
         t.start()
-
-    archivo = args.archivo[0]
 
     f = open(archivo, "r")
 
     txt = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
-    huff = table(txt, args.verbose, force=args.force)
+    huff = table(txt, args.verbose)[0]
+
+    compress_size = table(txt, args.verbose)[1]
 
     dict_huff = obtener_dict(huff) ##revisar si es necesario
 
@@ -194,7 +193,11 @@ if __name__ == '__main__':
 
     cabezal = crear_cabezal(archivo, len(elementos), 6, 55555)
 
-    print(os.path.getsize(archivo))
+    if args.force:
+        print("Compresion forzada")
+    else:
+        if compress_size > os.path.getsize(archivo): ##Hay que agregarle size del header a esto
+            raise Exception("El archivo comprimido es mas grande")
 
     if args.verbose:
         sys.stderr.write('Escribiendo cabezal...\n')
