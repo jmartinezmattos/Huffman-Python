@@ -22,7 +22,7 @@ def calc_force(huff, frecuencia):
 
     size = size/8 ##paso de bits a bytes
 
-    return False
+    return size
 
 def table(txt, verbose = False):
 
