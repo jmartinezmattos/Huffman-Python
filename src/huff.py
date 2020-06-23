@@ -172,9 +172,11 @@ if __name__ == '__main__':
 
     txt = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
-    huff = table(txt, args.verbose)[0]
+    result = table(txt, args.verbose)
 
-    compress_size = table(txt, args.verbose)[1]
+    huff = result[0]
+    compress_size = result[1]
+
 
     print(compress_size)
 
