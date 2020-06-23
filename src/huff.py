@@ -13,7 +13,18 @@ import threading
 import time
 
 
-def table(txt, verbose = False):
+def calc_force(huff, frecuencia):
+
+    size = 0
+
+    for x in huff:
+        size += frecuencia[x[0]]*len(x[1])
+
+    size = size/8 ##paso de bits a bytes
+
+    return False
+
+def table(txt, verbose = False, force = False):
 
     symb2freq = defaultdict(int)
 
@@ -21,7 +32,7 @@ def table(txt, verbose = False):
         sys.stderr.write('Contando frecuencia de caracteres...\n')
 
     for ch in txt:
-        symb2freq[ch] += 1
+        symb2freq[ch] += 1#importante
 
     """Huffman encode the given dict mapping symbols to weights"""
     heap = [[wt, [sym, ""]] for sym, wt in symb2freq.items()]
@@ -39,6 +50,13 @@ def table(txt, verbose = False):
         for pair in hi[1:]:
             pair[1] = '1' + pair[1]
         heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
+
+    if force:
+        print("Compresion forzada")
+    else:
+        if calc_force(huff, symb2freq):
+            raise Exception("El archivo comprimido es mas grande")
+
     return sorted(heappop(heap)[1:], key=lambda p: (len(p[-1]), p))
 
 def obtener_dict(tabla):
@@ -133,6 +151,8 @@ def animate():
            time.sleep(0.1)
        sys.stdout.write('\rProceso terminado!     ')
 
+
+
 if __name__ == '__main__':
 
     done = False
@@ -143,11 +163,8 @@ if __name__ == '__main__':
     parser.add_argument('archivo', nargs='+', action='store')
     args = parser.parse_args()
 
-    #t = threading.Thread(target=animate)
-    #t.start()
-
-    if args.force:
-        print("Forzado")
+    t = threading.Thread(target=animate)
+    t.start()
 
     archivo = args.archivo[0]
 
@@ -155,24 +172,20 @@ if __name__ == '__main__':
 
     txt = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
-    huff = table(txt, args.verbose)
+    huff = table(txt, args.verbose, force=args.force)
 
-    dict_huff = obtener_dict(huff)
+    dict_huff = obtener_dict(huff) ##revisar si es necesario
 
     if args.verbose:
         sys.stderr.write('\nTabla huffman completada:\n\n')
 
         for x in huff:
-            sys.stderr.write(str(x[0]) + ' = ' + str(x[1]) + '\n')
+            sys.stderr.write(str(x[0]) + ' = ' + str(x[1]) + '\n') ## x[0] es el caracter y x[1] el codigo huff
 
     if args.verbose:
         sys.stderr.write('\nCodificando texto...\n')
 
     newFile = open(create_name(archivo), "wb")
-
-    ##codigo_string = codificar(huff, txt)
-
-    ##final_list = to_binary(codigo_string)
 
     elementos = elements_array(huff)
 
@@ -229,10 +242,5 @@ if __name__ == '__main__':
         binario = struct.pack('!B', int(buffer_write, 2))
         newFile.write(binario)
         buffer_write = ''
-
-    #if args.verbose:
-    #    sys.stderr.write('Escribiendo texto codificado...\n')
-    #for x in final_list:
-    #    newFile.write(x)
 
     done = True
