@@ -51,13 +51,15 @@ def table(txt, verbose = False, force = False):
             pair[1] = '1' + pair[1]
         heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
 
+    huff = sorted(heappop(heap)[1:], key=lambda p: (len(p[-1]), p))
+
     if force:
         print("Compresion forzada")
     else:
         if calc_force(huff, symb2freq):
             raise Exception("El archivo comprimido es mas grande")
 
-    return sorted(heappop(heap)[1:], key=lambda p: (len(p[-1]), p))
+    return huff
 
 def obtener_dict(tabla):
     dict_huff = {}
