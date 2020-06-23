@@ -214,7 +214,10 @@ if __name__ == '__main__':
            newFile.write(binario)
            buffer_write = ''
 
-    if len(buffer_write) != 0:
+    if buffer_store != '':
+        print("el error")
+    if buffer_write != '':
+        print("el error2")
         while len(buffer_write) < 8:
             buffer_write += '0'
         binario = struct.pack('!B', int(buffer_write, 2))
