@@ -215,7 +215,13 @@ if __name__ == '__main__':
            buffer_write = ''
 
     if buffer_store != '':
-        print("el error")
+        print("Buffer STORE")
+        while len(buffer_store)<8:
+            buffer_store += '0'
+        binario = struct.pack('!B', int(buffer_store, 2))
+        newFile.write(binario)
+
+
     if buffer_write != '':
         print("el error2")
         while len(buffer_write) < 8:
