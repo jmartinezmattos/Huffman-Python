@@ -218,6 +218,7 @@ if __name__ == '__main__':
         print("Buffer STORE")
         while len(buffer_store)<8:
             buffer_store += '0'
+        print(buffer_store)
         binario = struct.pack('!B', int(buffer_store, 2))
         newFile.write(binario)
 
