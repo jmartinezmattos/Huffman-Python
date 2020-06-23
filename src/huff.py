@@ -214,6 +214,12 @@ if __name__ == '__main__':
            newFile.write(binario)
            buffer_write = ''
 
+    if len(buffer_write) != 0:
+        while len(buffer_write) < 8:
+            buffer_write += '0'
+        binario = struct.pack('!B', int(buffer_write, 2))
+        newFile.write(binario)
+
     #if args.verbose:
     #    sys.stderr.write('Escribiendo texto codificado...\n')
     #for x in final_list:
