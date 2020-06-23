@@ -70,7 +70,7 @@ if __name__ == '__main__':
 
     if path.exists(create_name(archivo)):
         sys.stderr.write("El archivo '" +create_name(archivo) +"' se sobreescribira. \n Descomprimir de todos modos? s/n \n")
-        answer = input()
+        answer = str(input())
         if answer != 's':
             sys.exit()
 
