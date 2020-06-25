@@ -9,7 +9,7 @@ from os import path
 MAGIC = 55555
 
 def int_to_key(entero, size):
-
+    '''Converts an integer to its binary representation in a string format'''
     a = bin(entero)
 
     corte = len(a) - size
@@ -22,7 +22,7 @@ def int_to_key(entero, size):
     return new_str
 
 def crear_diccionario(tabla):
-
+    '''Creates a dictionary using table'''
     new_dict = {}
 
     for x in tabla:
@@ -36,6 +36,7 @@ def crear_diccionario(tabla):
     return  new_dict
 
 def int_to_binary_str_array(entero):
+    '''Returns a string with the binary represantation of an int'''
     new_str = ''
 
     a = bin(entero)
@@ -49,6 +50,7 @@ def int_to_binary_str_array(entero):
     return new_str
 
 def create_name(name):
+    '''Replaces the extension of name with .ori'''
     i = 0
     nombre_final = ''
     while name[i] != '.':
@@ -85,9 +87,9 @@ if __name__ == '__main__':
     if magic_num != MAGIC:
         raise Exception('Bad magic number')
 
-    sym_arraylen = struct.unpack('!B', codigo[2])[0]
+    sym_arraylen = codigo[2]
 
-    sym_arraysize = struct.unpack('!B', codigo[3])[0]
+    sym_arraysize = codigo[3]
 
     filelen = struct.unpack('!I', codigo[4:8])[0]
 
@@ -100,9 +102,6 @@ if __name__ == '__main__':
 
     #################LECTURA ELEMENTOS BEGIN ##############################
 
-    print(sym_arraysize)
-    print(sym_arraylen)
-
     largo_elementos = int(sym_arraysize) * int(sym_arraylen)
 
     inicial = 8
@@ -112,9 +111,9 @@ if __name__ == '__main__':
     for x in range(0, largo_elementos, sym_arraysize):
         codigo_simbolo = []
 
-        simbolo = chr(struct.unpack('!B', codigo[inicial + x])[0])
+        simbolo = chr(codigo[inicial + x])
 
-        largo_huff = struct.unpack('!B', codigo[inicial + x + 1])[0]
+        largo_huff = codigo[inicial + x + 1]
 
         codigo_huff = struct.unpack('!I', codigo[inicial + x + 2: inicial + x + 6])[0]
 
@@ -133,7 +132,7 @@ if __name__ == '__main__':
         for key, value in dict.items():
             print(key, ' : ', value)
 
-    byte = int_to_binary_str_array(struct.unpack('!B', codigo[inicio_encriptado])[0])
+    byte = int_to_binary_str_array(codigo[inicio_encriptado])
     buffer = ''
     byte_pos = 0
     size = 0
@@ -151,7 +150,7 @@ if __name__ == '__main__':
             if byte_pos > 7:  # checkeamos si se termino el byte
                 byte_pos = 0
                 inicio_encriptado += 1
-                byte = int_to_binary_str_array(struct.unpack('!B', codigo[inicio_encriptado])[0])
+                byte = int_to_binary_str_array(codigo[inicio_encriptado])
 
             buffer += byte[byte_pos]
             byte_pos += 1
@@ -165,11 +164,11 @@ if __name__ == '__main__':
                     porcentaje = int((size/filelen)*100)
 
                 sys.stderr.flush()
-                sys.stderr.write('\rBytes impresos: ' + str(size) + ' de ' + str(filelen) + '     (' + str(porcentaje) + '%)')
+                sys.stderr.write(f'\rBytes impresos: {size} de {filelen} ({porcentaje}%) ')
 
     if args.verbose:
         sys.stderr.flush()
-        sys.stderr.write('\rBytes impresos: ' + str(size) + ' de ' + str(filelen) + '     (100%)')
+        sys.stderr.write(f'\rBytes impresos: {size} de {filelen} (100%) ')
 
     f.close()
 

@@ -14,7 +14,7 @@ import time
 
 
 def calc_force(huff, frecuencia):
-
+    '''Calculates the size of the resulting compressed file without header using codes table (huff) and frequenci table (frecuencia)'''
     size = 0
 
     for x in huff:
@@ -25,7 +25,7 @@ def calc_force(huff, frecuencia):
     return size
 
 def table(txt, verbose = False):
-
+    ''''Creates table of huffman codes of each character in txt. Use verbose = True if you want to print information during process'''
     symb2freq = defaultdict(int)
 
     if verbose:
@@ -58,25 +58,16 @@ def table(txt, verbose = False):
     return [huff, size]
 
 def obtener_dict(tabla):
-    dict_huff = {}
+    '''Creates a dictionary using tabla'''
+    huff_dict = {}
 
     for num in tabla:
-        dict_huff[num[0]] = num[1]
+        huff_dict[num[0]] = num[1]
 
-    return dict_huff
-
-def codificar(tabla, texto):
-
-    dict_huff = obtener_dict(tabla)
-
-    txt_bin = ''
-
-    for letra in texto:
-        txt_bin += dict_huff[letra]
-
-    return txt_bin
+    return huff_dict
 
 def create_name(name):
+    '''Replaces the extension of name with .huf'''
     i = 0
     nombre_final = ''
     while name[i] != '.':
@@ -85,34 +76,9 @@ def create_name(name):
     nombre_final += '.huf'
     return nombre_final
 
-def letra_to_binary(entrada, bits = 8, pack_format = 'B'):
-
-    print(entrada)
-
-
-    pack_form = '!' + pack_format
-    binario = struct.pack(pack_form, int(entrada, 2))
-
-    return binario
-
-def to_binary(entrada, bits=8, pack_format = 'B'):
-
-    byte_list = []
-    for i in range(0, len(entrada), bits):  # separo en bytes
-        byte_list.append(entrada[i:(i + bits)])
-
-    while len(byte_list[-1]) != bits:  # hacemos que el ultimo byte este completo
-        byte_list[-1] += '0'
-
-    final_list = []
-    pack_form = '!' + pack_format
-    for x in byte_list:
-        final_list.append(struct.pack(pack_form, int(x, 2)))
-
-    return final_list
 
 def crear_cabezal(archivo, sym_arraylen, sym_arraysize, magic):
-
+    '''Creates header'''
     magic_nbr = struct.pack('!H', magic)#dos bytes
     sym_arraylen = struct.pack('B',sym_arraylen)#un byte
     sym_arraysize = struct.pack('!B', sym_arraysize) #no se si esto esta bien le puse 8 por la cantidad de bits
@@ -123,7 +89,7 @@ def crear_cabezal(archivo, sym_arraylen, sym_arraysize, magic):
     return cabezal
 
 def elements_array(huff):
-
+    '''Creates part of header containing huffman codes'''
     lista_total = []
 
     for x in huff:
@@ -141,12 +107,13 @@ def elements_array(huff):
     return lista_total
 
 def animate():
-       for c in itertools.cycle(['|', '/', '-', '\\']):
-           if done:
-               break
-           sys.stderr.write('\rProcesando... ' + c +' ')
-           sys.stderr.flush()
-           time.sleep(0.1)
+    '''Esto no es necesario, solo es una animacion re piola'''
+    for c in itertools.cycle(['|', '/', '-', '\\']):
+       if done:
+            break
+       sys.stderr.write(f'\rProcesando... {c} ')
+       sys.stderr.flush()
+       time.sleep(0.1)
        sys.stdout.write('\rProceso terminado!     ')
 
 
@@ -163,25 +130,23 @@ if __name__ == '__main__':
 
     archivo = args.archivo[0]
 
-    if args.verbose:
-        sys.stderr.write('Size original: ' + str(os.path.getsize(archivo)) + '\n' )
-        ##t = threading.Thread(target=animate)
-        ##t.start()
-
     f = open(archivo, "r")
 
     txt = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
-    result = table(txt, args.verbose)
+    huff, compress_size = table(txt, args.verbose)
 
-    huff = result[0]
+    compress_size = int(compress_size + len(huff)*6 + 8)##Este int es para redondear porque compress_size es float
 
-    compress_size = result[1] + len(huff)*6 + 8
+    if args.verbose:
+        sys.stderr.write(f'Original size: {os.path.getsize(archivo)} bytes\n' )
+        sys.stderr.write(f"Compress size: {compress_size} bytes \n")
+        ##Esto de abajo es solo para una animacion (ver funcion animate)
+        ##t = threading.Thread(target=animate)
+        ##t.start()
 
 
-    print(compress_size)
-
-    dict_huff = obtener_dict(huff) ##revisar si es necesario
+    huff_dict = obtener_dict(huff)
 
     if args.verbose:
         sys.stderr.write('\nTabla huffman completada:\n\n')
@@ -222,7 +187,7 @@ if __name__ == '__main__':
     buffer_store = ''
 
     for letra in txt:
-        obtener = dict_huff[letra] ##obtengo el codigo huff de la letra
+        obtener = huff_dict[letra] ##obtengo el codigo huff de la letra
 
         buffer_store += obtener
 
