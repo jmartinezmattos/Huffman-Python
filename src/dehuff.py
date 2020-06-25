@@ -9,7 +9,7 @@ from os import path
 MAGIC = 55555
 
 def int_to_key(entero, size):
-    '''Converts an integer to its binary representation in a string format'''
+    '''Converts an integer to its binary huffman code (in some cases with '0' to the left) representation in a string format'''
     a = bin(entero)
 
     corte = len(a) - size
