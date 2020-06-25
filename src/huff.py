@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import math
 import mmap
 import os
 import struct
@@ -136,7 +137,7 @@ if __name__ == '__main__':
 
     huff, compress_size = table(txt, args.verbose)
 
-    compress_size = int(compress_size + len(huff)*6 + 8)##Este int es para redondear porque compress_size es float
+    compress_size = math.ceil(compress_size + len(huff)*6 + 8)##Este int es para redondear porque compress_size es float
 
     if args.verbose:
         sys.stderr.write(f'Original size: {os.path.getsize(archivo)} bytes\n' )
