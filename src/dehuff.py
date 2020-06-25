@@ -94,7 +94,7 @@ if __name__ == '__main__':
     filelen = struct.unpack('!I', codigo[4:8])[0]
 
     if args.verbose:
-        print(filelen)
+        print(f"Largo final: {filelen}")
 
     #################LECTURA DE CABEZAL END ##############################
 
