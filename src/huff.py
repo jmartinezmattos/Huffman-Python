@@ -15,7 +15,7 @@ import time
 
 
 def calc_force(huff, frecuencia):
-    '''Calculates the size of the resulting compressed file without header using codes table (huff) and frequenci table (frecuencia)'''
+    '''Calculates the size of the resulting compressed file without header using codes table (huff) and frequency table (frecuencia)'''
     size = 0
 
     for x in huff:
